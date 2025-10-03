@@ -1,4 +1,3 @@
-// src/components/TransactionForm.jsx
 import React, { useState } from 'react';
 import api from '../services/api';
 
@@ -20,7 +19,6 @@ const TransactionForm = ({ onTransactionAdded }) => {
     try {
       const res = await api.post('/transactions', formData);
       onTransactionAdded(res.data);
-      // Reset form
       setFormData({
         type: 'expense', amount: '', category: '',
         date: new Date().toISOString().slice(0, 10), description: ''

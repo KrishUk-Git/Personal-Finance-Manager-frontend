@@ -1,4 +1,3 @@
-// src/pages/Dashboard.jsx
 import React, { useEffect, useState, useContext } from 'react';
 import api from '../services/api';
 import AuthContext from '../context/AuthContext';
