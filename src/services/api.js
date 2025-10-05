@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: ' https://personal-finance-manager-backend-l8v8.onrender.com/api',
+  baseURL: ' https://personal-finance-manager-backend-4uij.onrender.com/api',
   headers: {
     'Content-Type': 'application/json',
   },
