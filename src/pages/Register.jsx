@@ -1,12 +1,9 @@
-// frontend/src/pages/Register.jsx
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    name: '', // <-- Add this line
     username: '',
     email: '',
     password: '',
@@ -14,7 +11,7 @@ const Register = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const { name, username, email, password } = formData;
+  const { username, email, password } = formData;
 
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,8 +19,7 @@ const Register = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Ensure 'name' is included in the object sent to the API
-      const res = await api.post('/auth/register', { name, username, email, password });
+      const res = await api.post('/auth/register', { username, email, password });
       localStorage.setItem('token', res.data.token);
       navigate('/dashboard');
     } catch (err) {
@@ -38,25 +34,6 @@ const Register = () => {
         <h2 className="text-3xl font-bold text-center text-gray-800">Register</h2>
         {error && <p className="text-red-500 text-center">{error}</p>}
         <form onSubmit={onSubmit} className="space-y-6">
-          
-          {/* --- Add this Name Input Field --- */}
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Name
-            </label>
-            <input
-              type="text"
-              name="name"
-              value={name}
-              onChange={onChange}
-              required
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-
           <div>
             <label
               htmlFor="username"
