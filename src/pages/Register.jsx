@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
 
 const Register = () => {
@@ -18,21 +18,21 @@ const Register = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    setError(''); // Clear previous errors
     try {
       const res = await api.post('/auth/register', { username, email, password });
       localStorage.setItem('token', res.data.token);
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.msg || 'Registration failed');
-      console.error(err.response?.data);
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-3xl font-bold text-center text-gray-800">Register</h2>
-        {error && <p className="text-red-500 text-center">{error}</p>}
+        <h2 className="text-3xl font-bold text-center text-gray-800">Create Account</h2>
+        {error && <p className="text-red-500 text-center bg-red-100 p-3 rounded">{error}</p>}
         <form onSubmit={onSubmit} className="space-y-6">
           <div>
             <label
@@ -92,6 +92,12 @@ const Register = () => {
             </button>
           </div>
         </form>
+        <p className="text-sm text-center text-gray-600">
+          Already have an account?{' '}
+          <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+            Login
+          </Link>
+        </p>
       </div>
     </div>
   );
