@@ -18,7 +18,7 @@ const Register = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    setError(''); // Clear previous errors
+    setError(''); 
     try {
       const res = await api.post('/auth/register', { username, email, password });
       localStorage.setItem('token', res.data.token);
