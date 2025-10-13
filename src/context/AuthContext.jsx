@@ -1,11 +1,15 @@
-import { createContext, useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext, useContext, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
+
+export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadUser = async () => {
@@ -28,26 +32,28 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('token', res.data.token);
     const userRes = await api.get('/auth');
     setUser(userRes.data);
+    navigate('/dashboard');
   };
 
-  const register = async (name, email, password) => {
-      const res = await api.post('/auth/register', { name, email, password });
-      localStorage.setItem('token', res.data.token);
-      const userRes = await api.get('/auth');
-      setUser(userRes.data);
+  const register = async (username, email, password) => {
+    const res = await api.post('/auth/register', { username, email, password });
+    localStorage.setItem('token', res.data.token);
+    const userRes = await api.get('/auth');
+    setUser(userRes.data);
+    navigate('/dashboard');
   };
-
 
   const logout = () => {
     localStorage.removeItem('token');
     setUser(null);
+    navigate('/login');
   };
 
+  const value = useMemo(() => ({ user, loading, login, register, logout }), [user, loading]);
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
-      {children}
+    <AuthContext.Provider value={value}>
+      {!loading && children}
     </AuthContext.Provider>
   );
 };
-
-export default AuthContext;

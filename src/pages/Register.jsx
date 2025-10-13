@@ -1,102 +1,39 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import api from '../services/api';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Register = () => {
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-  });
+  const [formData, setFormData] = useState({ username: '', email: '', password: '' });
   const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const { register } = useAuth();
 
-  const { username, email, password } = formData;
-
-  const onChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-
-  const onSubmit = async (e) => {
+  const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const onSubmit = async e => {
     e.preventDefault();
-    setError(''); 
+    setError('');
     try {
-      const res = await api.post('/auth/register', { username, email, password });
-      localStorage.setItem('token', res.data.token);
-      navigate('/dashboard');
+      await register(formData.username, formData.email, formData.password);
     } catch (err) {
-      setError(err.response?.data?.msg || 'Registration failed');
+      setError(err.response?.data?.msg || 'An error occurred.');
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-3xl font-bold text-center text-gray-800">Create Account</h2>
-        {error && <p className="text-red-500 text-center bg-red-100 p-3 rounded">{error}</p>}
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h2 className="text-2xl font-bold text-center mb-6">Register</h2>
+        {error && <p className="bg-red-100 text-red-700 p-3 rounded mb-4 text-center">{error}</p>}
         <form onSubmit={onSubmit} className="space-y-6">
-          <div>
-            <label
-              htmlFor="username"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Username
-            </label>
-            <input
-              type="text"
-              name="username"
-              value={username}
-              onChange={onChange}
-              required
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Email Address
-            </label>
-            <input
-              type="email"
-              name="email"
-              value={email}
-              onChange={onChange}
-              required
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Password
-            </label>
-            <input
-              type="password"
-              name="password"
-              value={password}
-              onChange={onChange}
-              required
-              minLength="6"
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-          <div>
-            <button
-              type="submit"
-              className="w-full px-4 py-2 font-semibold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              Register
-            </button>
-          </div>
+          <input type="text" name="username" onChange={onChange} placeholder="Username" required className="w-full p-2 border rounded" />
+          <input type="email" name="email" onChange={onChange} placeholder="Email" required className="w-full p-2 border rounded" />
+          <input type="password" name="password" onChange={onChange} placeholder="Password" required minLength="6" className="w-full p-2 border rounded" />
+          <button type="submit" className="w-full bg-blue-600 text-white p-3 rounded hover:bg-blue-700 font-semibold">
+            Register
+          </button>
         </form>
-        <p className="text-sm text-center text-gray-600">
+        <p className="text-center mt-4">
           Already have an account?{' '}
-          <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
-            Login
-          </Link>
+          <Link to="/login" className="text-blue-600 hover:underline">Login</Link>
         </p>
       </div>
     </div>
