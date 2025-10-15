@@ -4,7 +4,10 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Budgets from './pages/Budgets'; // Import the new Budgets page
+import Budgets from './pages/Budgets';
+import Goals from './pages/Goals';
+import Reports from './pages/Reports';
+import Profile from './pages/Profile';
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -21,19 +24,23 @@ const AppRoutes = () => {
       <Route path="/register" element={<Register />} />
       <Route 
         path="/dashboard" 
-        element={
-          <PrivateRoute>
-            <Dashboard />
-          </PrivateRoute>
-        } 
+        element={<PrivateRoute><Dashboard /></PrivateRoute>} 
       />
       <Route 
         path="/budgets" 
-        element={
-          <PrivateRoute>
-            <Budgets />
-          </PrivateRoute>
-        } 
+        element={<PrivateRoute><Budgets /></PrivateRoute>} 
+      />
+      <Route 
+        path="/goals" 
+        element={<PrivateRoute><Goals /></PrivateRoute>} 
+      />
+      <Route 
+        path="/reports" 
+        element={<PrivateRoute><Reports /></PrivateRoute>} 
+      />
+      <Route 
+        path="/profile" 
+        element={<PrivateRoute><Profile /></PrivateRoute>} 
       />
       <Route path="*" element={<Navigate to="/login" />} />
     </Routes>
