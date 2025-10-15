@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Budgets from './pages/Budgets'; // Import the new Budgets page
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -23,6 +24,14 @@ const AppRoutes = () => {
         element={
           <PrivateRoute>
             <Dashboard />
+          </PrivateRoute>
+        } 
+      />
+      <Route 
+        path="/budgets" 
+        element={
+          <PrivateRoute>
+            <Budgets />
           </PrivateRoute>
         } 
       />
