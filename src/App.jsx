@@ -7,7 +7,7 @@ import Register from './pages/Register';
 import Budgets from './pages/Budgets';
 import Goals from './pages/Goals';
 import Reports from './pages/Reports';
-import Profile from './pages-s/Profile';
+import Profile from './pages/Profile'; // Corrected import path
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
