@@ -7,7 +7,7 @@ import Register from './pages/Register';
 import Budgets from './pages/Budgets';
 import Goals from './pages/Goals';
 import Reports from './pages/Reports';
-import Profile from './pages/Profile';
+import Profile from './pages-s/Profile';
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -17,35 +17,18 @@ const PrivateRoute = ({ children }) => {
   return user ? children : <Navigate to="/login" />;
 };
 
-const AppRoutes = () => {
-  return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route 
-        path="/dashboard" 
-        element={<PrivateRoute><Dashboard /></PrivateRoute>} 
-      />
-      <Route 
-        path="/budgets" 
-        element={<PrivateRoute><Budgets /></PrivateRoute>} 
-      />
-      <Route 
-        path="/goals" 
-        element={<PrivateRoute><Goals /></PrivateRoute>} 
-      />
-      <Route 
-        path="/reports" 
-        element={<PrivateRoute><Reports /></PrivateRoute>} 
-      />
-      <Route 
-        path="/profile" 
-        element={<PrivateRoute><Profile /></PrivateRoute>} 
-      />
-      <Route path="*" element={<Navigate to="/login" />} />
-    </Routes>
-  );
-};
+const AppRoutes = () => (
+  <Routes>
+    <Route path="/login" element={<Login />} />
+    <Route path="/register" element={<Register />} />
+    <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+    <Route path="/budgets" element={<PrivateRoute><Budgets /></PrivateRoute>} />
+    <Route path="/goals" element={<PrivateRoute><Goals /></PrivateRoute>} />
+    <Route path="/reports" element={<PrivateRoute><Reports /></PrivateRoute>} />
+    <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+    <Route path="*" element={<Navigate to="/login" />} />
+  </Routes>
+);
 
 function App() {
   return (

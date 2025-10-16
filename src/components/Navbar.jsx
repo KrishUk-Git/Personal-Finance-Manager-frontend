@@ -5,7 +5,6 @@ import { useAuth } from '../context/AuthContext';
 const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-
   const onLogout = () => {
     logout();
     navigate('/login');
@@ -20,6 +19,9 @@ const Navbar = () => {
             <>
               <Link to="/dashboard" className="mr-4 hover:text-gray-300">Dashboard</Link>
               <Link to="/budgets" className="mr-4 hover:text-gray-300">Budgets</Link>
+              <Link to="/goals" className="mr-4 hover:text-gray-300">Goals</Link>
+              <Link to="/reports" className="mr-4 hover:text-gray-300">Reports</Link>
+              <Link to="/profile" className="mr-4 hover:text-gray-300">Profile</Link>
               <button onClick={onLogout} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                 Logout
               </button>

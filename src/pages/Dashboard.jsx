@@ -11,18 +11,17 @@ const Dashboard = () => {
   const { user } = useAuth();
   const [transactions, setTransactions] = useState([]);
   const [filteredTransactions, setFilteredTransactions] = useState([]);
-  const [filters, setFilters] = useState({
-    type: 'all',
-    category: '',
-    dateRange: 'all',
-  });
+  const [filters, setFilters] = useState({ type: 'all', category: '' });
 
   useEffect(() => {
     fetchTransactions();
   }, []);
 
   useEffect(() => {
-    applyFilters();
+    let tempTransactions = [...transactions];
+    if (filters.type !== 'all') tempTransactions = tempTransactions.filter((t) => t.type === filters.type);
+    if (filters.category) tempTransactions = tempTransactions.filter((t) => t.category.toLowerCase().includes(filters.category.toLowerCase()));
+    setFilteredTransactions(tempTransactions);
   }, [transactions, filters]);
 
   const fetchTransactions = async () => {
@@ -34,23 +33,31 @@ const Dashboard = () => {
     }
   };
 
-  const applyFilters = () => {
-    let tempTransactions = [...transactions];
-
-    if (filters.type !== 'all') {
-      tempTransactions = tempTransactions.filter(t => t.type === filters.type);
+  const handleTransactionDeleted = async (id) => {
+    try {
+      await api.delete(`/transactions/${id}`);
+      setTransactions(transactions.filter((t) => t._id !== id));
+    } catch (err) {
+      console.error(err);
     }
-    if (filters.category) {
-      tempTransactions = tempTransactions.filter(t => t.category.toLowerCase().includes(filters.category.toLowerCase()));
-    }
-
-    setFilteredTransactions(tempTransactions);
   };
 
-  const handleFilterChange = (e) => {
-    setFilters({ ...filters, [e.target.name]: e.target.value });
+  const handleExport = async () => {
+    try {
+      const res = await api.get('/reports/export/csv', { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'transactions.csv');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err) {
+      console.error('Failed to export data', err);
+      alert('Failed to export data.');
+    }
   };
-  
+
   return (
     <div className="min-h-screen bg-gray-100">
       <Navbar />
@@ -64,20 +71,19 @@ const Dashboard = () => {
           </div>
           <div className="lg:col-span-2">
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <h2 className="text-2xl font-bold mb-4">Transactions</h2>
-              {/* Filter Controls */}
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold">Transactions</h2>
+                <button onClick={handleExport} className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">Export CSV</button>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <select name="type" onChange={handleFilterChange} className="p-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                <select name="type" onChange={(e) => setFilters({ ...filters, type: e.target.value })} className="p-2 border rounded">
                   <option value="all">All Types</option>
                   <option value="income">Income</option>
                   <option value="expense">Expense</option>
                 </select>
-                <input type="text" name="category" placeholder="Filter by category..." onChange={handleFilterChange} className="p-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+                <input type="text" name="category" placeholder="Filter by category..." onChange={(e) => setFilters({ ...filters, category: e.target.value })} className="p-2 border rounded" />
               </div>
-              <TransactionList
-                transactions={filteredTransactions}
-                onTransactionDeleted={(id) => setTransactions(transactions.filter(t => t._id !== id))}
-              />
+              <TransactionList transactions={filteredTransactions} onTransactionDeleted={handleTransactionDeleted} />
             </div>
           </div>
         </div>

@@ -1,15 +1,13 @@
-import React, { useState, useEffect, createContext, useContext, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import api from '../services/api';
 
-const AuthContext = createContext(null);
+const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const loadUser = async () => {
@@ -32,7 +30,6 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('token', res.data.token);
     const userRes = await api.get('/auth');
     setUser(userRes.data);
-    navigate('/dashboard');
   };
 
   const register = async (username, email, password) => {
@@ -40,20 +37,15 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('token', res.data.token);
     const userRes = await api.get('/auth');
     setUser(userRes.data);
-    navigate('/dashboard');
   };
 
   const logout = () => {
     localStorage.removeItem('token');
     setUser(null);
-    navigate('/login');
   };
 
-  const value = useMemo(() => ({ user, loading, login, register, logout }), [user, loading]);
+  const value = { user, loading, login, register, logout };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {!loading && children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{!loading && children}</AuthContext.Provider>;
 };
+
