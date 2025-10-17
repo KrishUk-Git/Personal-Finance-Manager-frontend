@@ -3,9 +3,9 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
-import Register from './pages/Register';
+import Register from './pages/Register'; 
 import Budgets from './pages/Budgets';
-import Goals from './pages-s/Goals';
+import Goals from './pages/Goals';
 import Reports from './pages/Reports';
 import Profile from './pages/Profile';
 import Recurring from './pages/Recurring';
