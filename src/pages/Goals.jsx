@@ -15,9 +15,7 @@ const Goals = () => {
     try {
       const res = await api.get('/goals');
       setGoals(res.data);
-    } catch (err) {
-      console.error("Failed to fetch goals", err);
-    }
+    } catch (err) { console.error("Failed to fetch goals", err); }
   };
 
   const onChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -28,18 +26,14 @@ const Goals = () => {
       const res = await api.post('/goals', formData);
       setGoals([...goals, res.data]);
       setFormData({ name: '', targetAmount: '', targetDate: '' });
-    } catch (err) {
-      console.error("Failed to add goal", err);
-    }
+    } catch (err) { console.error("Failed to add goal", err); }
   };
   
   const onDeleteGoal = async (id) => {
     try {
       await api.delete(`/goals/${id}`);
       setGoals(goals.filter(g => g._id !== id));
-    } catch(err) {
-      console.error("Failed to delete goal", err);
-    }
+    } catch(err) { console.error("Failed to delete goal", err); }
   };
 
   const onUpdateGoal = async (id, amount) => {
@@ -48,9 +42,7 @@ const Goals = () => {
       try {
         const res = await api.put(`/goals/${id}`, { currentAmount: Number(currentAmount) });
         setGoals(goals.map(g => g._id === id ? res.data : g));
-      } catch(err) {
-        console.error("Failed to update goal", err);
-      }
+      } catch(err) { console.error("Failed to update goal", err); }
     }
   };
 

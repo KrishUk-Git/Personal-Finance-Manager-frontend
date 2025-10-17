@@ -42,7 +42,7 @@ const Dashboard = () => {
     }
   };
 
-  const handleExport = async () => {
+  const handleExportCSV = async () => {
     try {
       const res = await api.get('/reports/export/csv', { responseType: 'blob' });
       const url = window.URL.createObjectURL(new Blob([res.data]));
@@ -53,8 +53,24 @@ const Dashboard = () => {
       link.click();
       link.remove();
     } catch (err) {
-      console.error('Failed to export data', err);
+      console.error('Failed to export CSV data', err);
       alert('Failed to export data.');
+    }
+  };
+
+  const handleExportPDF = async () => {
+    try {
+      const res = await api.get('/reports/export/pdf', { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([res.data], { type: 'application/pdf' }));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'transactions.pdf');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err) {
+      console.error('Failed to export PDF data', err);
+      alert('Failed to export PDF data.');
     }
   };
 
@@ -73,7 +89,10 @@ const Dashboard = () => {
             <div className="bg-white p-6 rounded-lg shadow-md">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold">Transactions</h2>
-                <button onClick={handleExport} className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">Export CSV</button>
+                <div className="flex space-x-2">
+                    <button onClick={handleExportCSV} className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 text-sm">Export CSV</button>
+                    <button onClick={handleExportPDF} className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 text-sm">Export PDF</button>
+                </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <select name="type" onChange={(e) => setFilters({ ...filters, type: e.target.value })} className="p-2 border rounded">

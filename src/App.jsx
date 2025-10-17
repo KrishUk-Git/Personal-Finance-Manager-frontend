@@ -5,9 +5,11 @@ import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Budgets from './pages/Budgets';
-import Goals from './pages/Goals';
+import Goals from './pages-s/Goals';
 import Reports from './pages/Reports';
-import Profile from './pages/Profile'; // Corrected import path
+import Profile from './pages/Profile';
+import Recurring from './pages/Recurring';
+import Forecast from './pages/Forecast';
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -25,7 +27,9 @@ const AppRoutes = () => (
     <Route path="/budgets" element={<PrivateRoute><Budgets /></PrivateRoute>} />
     <Route path="/goals" element={<PrivateRoute><Goals /></PrivateRoute>} />
     <Route path="/reports" element={<PrivateRoute><Reports /></PrivateRoute>} />
+    <Route path="/recurring" element={<PrivateRoute><Recurring /></PrivateRoute>} />
     <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+    <Route path="/forecast" element={<PrivateRoute><Forecast /></PrivateRoute>} />
     <Route path="*" element={<Navigate to="/login" />} />
   </Routes>
 );
